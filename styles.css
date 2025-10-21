@@ -1399,6 +1399,96 @@ body {
         font-size: 2rem;
     }
     
+    /* Fix hero text overlap on small phones */
+    .hero {
+        padding: 1rem 0;
+        min-height: 90vh;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 10;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        margin: 1rem;
+    }
+    
+    .hero-title {
+        font-size: 2rem !important;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+    }
+    
+    .title-word {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+        opacity: 0.9;
+    }
+    
+    /* Reduce geometric shapes on small phones */
+    .geometric-shapes {
+        opacity: 0.3;
+    }
+    
+    .shape {
+        opacity: 0.05 !important;
+    }
+    
+    .shape-1 {
+        width: 120px;
+        height: 120px;
+        top: 5%;
+        right: 5%;
+    }
+    
+    .shape-2 {
+        width: 80px;
+        height: 80px;
+        top: 70%;
+        right: 10%;
+    }
+    
+    .shape-3 {
+        width: 60px;
+        height: 60px;
+        top: 25%;
+        right: 30%;
+    }
+    
+    .shape-4 {
+        width: 100px;
+        height: 100px;
+        top: 85%;
+        right: 2%;
+    }
+    
+    .shape-5 {
+        width: 70px;
+        height: 70px;
+        top: 15%;
+        right: 50%;
+    }
+    
+    /* Hero actions mobile fix */
+    .hero-actions {
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+    
+    .cta-button {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.9rem;
+        width: 100%;
+        max-width: 200px;
+    }
+    
     .loading-bar {
         width: 250px;
     }
@@ -2281,4 +2371,516 @@ allery Detail Page Styles */
 /* Smooth Transitions for All Footer Elements */
 .footer * {
     transition: var(--transition-smooth);
+}/* 
+===== WATCH PROCESS SECTION ===== */
+.process-section {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, 
+        var(--pure-black) 0%, 
+        var(--deep-black) 50%, 
+        #0A0A0A 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.process-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 30% 20%, 
+        rgba(255, 215, 0, 0.03) 0%, 
+        transparent 50%);
+    pointer-events: none;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    position: relative;
+    z-index: 2;
+}
+
+.section-header .section-title {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary-gold), var(--secondary-gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.section-header .section-subtitle {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.process-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.process-item {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+    position: relative;
+    backdrop-filter: blur(10px);
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+.process-item:hover {
+    transform: translateY(-10px);
+    border-color: rgba(255, 215, 0, 0.3);
+    box-shadow: 0 20px 40px rgba(255, 215, 0, 0.1);
+}
+
+.process-video {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+    background: var(--deep-black);
+    border-radius: 15px;
+}
+
+.process-video iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    transition: var(--transition-smooth);
+}
+
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: var(--transition-smooth);
+    pointer-events: none;
+}
+
+.process-item:hover .video-overlay {
+    opacity: 0;
+}
+
+.play-button {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 215, 0, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--pure-black);
+    transition: var(--transition-smooth);
+    animation: pulse 2s infinite;
+}
+
+.play-button svg {
+    width: 24px;
+    height: 24px;
+    margin-left: 3px;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(255, 215, 0, 0);
+    }
+}
+
+.process-content {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.process-content h3 {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    color: var(--primary-gold);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.process-content p {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.process-cta {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: rgba(255, 215, 0, 0.05);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.process-cta h3 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--primary-gold);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.process-cta p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+    font-size: 1rem;
+}
+
+.cta-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.1), 
+        transparent);
+    transition: left 0.6s ease;
+}
+
+.cta-btn:hover::before {
+    left: 100%;
+}
+
+.cta-btn.primary {
+    background: linear-gradient(135deg, var(--primary-gold), var(--secondary-gold));
+    color: var(--pure-black);
+    border: 2px solid transparent;
+}
+
+.cta-btn.primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+}
+
+.cta-btn.secondary {
+    background: transparent;
+    color: var(--primary-gold);
+    border: 2px solid var(--primary-gold);
+}
+
+.cta-btn.secondary:hover {
+    background: rgba(255, 215, 0, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+}
+
+.cta-btn svg {
+    width: 16px;
+    height: 16px;
+    transition: var(--transition-smooth);
+}
+
+.cta-btn:hover svg {
+    transform: translateX(3px);
+}
+
+/* Process Section Responsive Design */
+@media (max-width: 1024px) {
+    .process-section {
+        padding: 4rem 0;
+    }
+    
+    .section-header .section-title {
+        font-size: 2.5rem;
+    }
+    
+    .process-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .process-video {
+        height: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    .process-section {
+        padding: 3rem 0;
+    }
+    
+    .section-header {
+        margin-bottom: 3rem;
+    }
+    
+    .section-header .section-title {
+        font-size: 2rem;
+    }
+    
+    .section-header .section-subtitle {
+        font-size: 1rem;
+    }
+    
+    .process-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .process-video {
+        height: 350px;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+    
+    .process-content {
+        padding: 1rem;
+    }
+    
+    .process-content h3 {
+        font-size: 1.2rem;
+    }
+    
+    .process-cta {
+        padding: 2rem 1rem;
+    }
+    
+    .process-cta h3 {
+        font-size: 1.5rem;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .cta-btn {
+        width: 100%;
+        max-width: 250px;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-header .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .process-video {
+        height: 300px;
+        max-width: 250px;
+        margin: 0 auto;
+    }
+    
+    .play-button {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .play-button svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .process-cta h3 {
+        font-size: 1.3rem;
+    }
+    
+    .process-cta p {
+        font-size: 1rem;
+    }
+}
+
+/* Enhanced Animation Effects */
+.process-item {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.process-item:nth-child(1) { animation-delay: 0.1s; }
+.process-item:nth-child(2) { animation-delay: 0.2s; }
+.process-item:nth-child(3) { animation-delay: 0.3s; }
+.process-item:nth-child(4) { animation-delay: 0.4s; }
+.process-item:nth-child(5) { animation-delay: 0.5s; }
+.process-item:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Process Section Background Effects */
+.process-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, 
+        rgba(255, 215, 0, 0.05) 0%, 
+        transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}/* E
+xtra small phones (320px and below) */
+@media (max-width: 320px) {
+    .hero-title {
+        font-size: 1.8rem !important;
+    }
+    
+    .hero-content {
+        margin: 0.5rem;
+        padding: 0.8rem;
+    }
+    
+    .hero-badge {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.8rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 0.8rem;
+    }
+    
+    .cta-button {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.8rem;
+    }
+    
+    /* Further reduce shapes on very small screens */
+    .shape {
+        opacity: 0.03 !important;
+    }
+    
+    .shape-1, .shape-2, .shape-3, .shape-4, .shape-5 {
+        transform: scale(0.7);
+    }
+}
+
+/* Landscape orientation fix for small phones */
+@media (max-height: 500px) and (orientation: landscape) {
+    .hero {
+        min-height: 100vh;
+        padding: 0.5rem 0;
+    }
+    
+    .hero-content {
+        margin: 0.5rem;
+        padding: 0.5rem;
+    }
+    
+    .hero-title {
+        font-size: 1.5rem !important;
+        margin-bottom: 0.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 0.8rem;
+        margin-bottom: 1rem;
+    }
+    
+    .hero-actions {
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+    
+    .cta-button {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    /* Hide shapes in landscape on small screens */
+    .geometric-shapes {
+        display: none;
+    }
+}/* Enhanced
+ Process Grid for Reel Aspect Ratio */
+@media (min-width: 1200px) {
+    .process-grid {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 1000px;
+        gap: 2.5rem;
+    }
+    
+    .process-video {
+        height: 550px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .process-grid {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 700px;
+        gap: 2rem;
+    }
+    
+    .process-video {
+        height: 450px;
+    }
+}
+
+/* Ensure proper aspect ratio maintenance */
+.process-video iframe {
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+/* Enhanced hover effect for reel-style cards */
+.process-item:hover .process-video {
+    transform: scale(1.02);
+}
+
+.process-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 50px rgba(255, 215, 0, 0.15);
 }
