@@ -11,7 +11,7 @@ class GalleryDetail {
         // Get folder name from URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         this.folderName = urlParams.get('folder');
-        
+
         if (!this.folderName) {
             // Redirect back to main gallery if no folder specified
             window.location.href = 'index.html#gallery';
@@ -35,13 +35,13 @@ class GalleryDetail {
 
         const updateCursor = () => {
             if (!isMoving) return;
-            
+
             orchidCursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
-            
+
             trailX += (cursorX - trailX) * 0.08;
             trailY += (cursorY - trailY) * 0.08;
             cursorTrail.style.transform = `translate(${trailX}px, ${trailY}px) translate(-50%, -50%)`;
-            
+
             if (Math.abs(cursorX - trailX) < 1 && Math.abs(cursorY - trailY) < 1) {
                 isMoving = false;
             } else {
@@ -53,12 +53,12 @@ class GalleryDetail {
         document.addEventListener('mousemove', (e) => {
             cursorX = e.clientX;
             cursorY = e.clientY;
-            
+
             if (!isMoving) {
                 isMoving = true;
                 requestAnimationFrame(updateCursor);
             }
-            
+
             clearTimeout(mouseMoveTimeout);
             mouseMoveTimeout = setTimeout(() => {
                 isMoving = false;
@@ -67,7 +67,7 @@ class GalleryDetail {
 
         // Cursor interactions
         const interactiveElements = document.querySelectorAll('a, button, .detail-image');
-        
+
         interactiveElements.forEach(el => {
             el.addEventListener('mouseenter', () => {
                 orchidCursor.classList.add('hover');
@@ -88,121 +88,121 @@ class GalleryDetail {
                 title: 'Custom Keychains',
                 description: 'Personalized resin keychains with your precious memories',
                 images: [
-                    '1keychain ocean.jpg',
-                    '2keychain amore.jpg',
-                    'keychain bunch 1.jpg',
-                    'keychain bunch 2.jpg',
-                    'keychain k1.jpg',
-                    'keychain k2.jpg',
-                    'keychain riya.jpg',
-                    'keychain s.jpg',
-                    'keychain t.jpg'
+                    '1keychain ocean.webp',
+                    '2keychain amore.webp',
+                    'keychain bunch 1.webp',
+                    'keychain bunch 2.webp',
+                    'keychain k1.webp',
+                    'keychain k2.webp',
+                    '3keychain riya.webp',
+                    'keychain s.webp',
+                    'keychain t.webp'
                 ]
             },
             'pendant 1': {
                 title: 'Resin Pendants',
                 description: 'Beautiful and unique resin pendants for every occasion',
                 images: [
-                    'pendant bunch 1.jpg',
-                    'pendant bunch 2.jpg',
-                    'pendant combo 1.jpg',
-                    'pendant combo 2.jpg',
-                    'pendant white.jpg',
-                    'pendant.png'
+                    'pendant bunch 1.webp',
+                    'pendant bunch 2.webp',
+                    'pendant combo 1.webp',
+                    'pendant combo 2.webp',
+                    'pendant white.webp',
+                    'pendant.webp'
                 ]
             },
             'phone case 1': {
                 title: 'Phone Cases',
                 description: 'Protective and stylish custom resin phone cases',
                 images: [
-                    'clear case 1.JPG',
-                    'clear case 2.JPG',
-                    'phone case same.png',
-                    'purple case 2.JPG',
-                    'purple case.JPG'
+                    'clear case 1.webp',
+                    'clear case 2.webp',
+                    'phone case same.webp',
+                    'purple case 2.webp',
+                    'purple case.webp'
                 ]
             },
             'photo frame': {
                 title: 'Photo Frames',
                 description: 'Preserve your memories in beautiful resin frames',
                 images: [
-                    'bookmark.jpg',
-                    'box.jpg',
-                    'photoframe.JPG',
-                    'smol art.jpg'
+                    'bookmark.webp',
+                    'box.webp',
+                    'photoframe.webp',
+                    'smol art.webp'
                 ]
             },
             'tray and coaster': {
                 title: 'Trays & Coasters',
                 description: 'Functional art pieces for your home',
                 images: [
-                    'blue bowl.jpg',
-                    'coaster set 1.jpg',
-                    'combo 1.jpg',
-                    'combo 2.jpg',
-                    'red tray.jpg',
-                    'tray 1.JPG',
-                    'tray 2.JPG',
-                    'tray combo.JPG'
+                    'blue bowl.webp',
+                    'coaster set 1.webp',
+                    'combo 1.webp',
+                    'combo 2.webp',
+                    'red tray.webp',
+                    'tray 1.webp',
+                    'tray 2.webp',
+                    'tray combo.webp'
                 ]
             },
             'wall art': {
                 title: 'Wall Art',
                 description: 'Stunning resin wall art pieces',
                 images: [
-                    'clocl and ocean art combo.JPG',
-                    'mantra and wall art 1.JPG',
-                    'mantra and wall art 2.JPG',
-                    'mantra and wall art 3.JPG',
-                    'mantra and wall art 4.JPG',
-                    'mantra and wall art.JPG',
-                    'mantra tablet 2.JPG',
-                    'mantra tablet 3.JPG',
-                    'mantra tablet 5.JPG',
-                    'mantra tablet 6.JPG',
-                    'mantra tablet.JPG',
-                    'name plate.JPG',
-                    'ocean art 1.JPG',
-                    'ocean art 2.JPG',
-                    'ocean art 3.JPG',
-                    'ocean art 4.JPG'
+                    'clocl and ocean art combo.webp',
+                    'mantra and wall art 1.webp',
+                    'mantra and wall art 2.webp',
+                    'mantra and wall art 3.webp',
+                    'mantra and wall art 4.webp',
+                    'mantra and wall art.webp',
+                    'mantra tablet 2.webp',
+                    'mantra tablet 3.webp',
+                    'mantra tablet 5.webp',
+                    'mantra tablet 6.webp',
+                    'mantra tablet.webp',
+                    'name plate.webp',
+                    'ocean art 1.webp',
+                    'ocean art 2.webp',
+                    'ocean art 3.webp',
+                    'ocean art 4.webp'
                 ]
             },
             'wall clock': {
                 title: 'Wall Clocks',
                 description: 'Functional timepieces with artistic flair',
                 images: [
-                    'abstract 1.JPG',
-                    'abstract 2.JPG',
-                    'black 1.JPG',
-                    'black 2.JPG',
-                    'blue gold 1.JPG',
-                    'blue gold 2.JPG',
-                    'blue white 1.jpg',
-                    'blue white 2.jpg',
-                    'blue white 3.jpg',
-                    'blue white 4.jpg',
-                    'blue white 5.jpg',
-                    'cyan 1.JPG',
-                    'cyan 2.JPG',
-                    'cyan 3.JPG',
-                    'gold white 1.JPG',
-                    'gold white 2.JPG',
-                    'gold white 3.JPG',
-                    'grey gold 1.JPG',
-                    'grey gold 2.JPG',
-                    'night beach 1.JPG',
-                    'night beach 2.JPG',
-                    'ocean 1.JPG',
-                    'ocean 2.JPG',
-                    'ocean 3.JPG',
-                    'ocean 4.JPG'
+                    'abstract 1.webp',
+                    'abstract 2.webp',
+                    'black 1.webp',
+                    'black 2.webp',
+                    'blue gold 1.webp',
+                    'blue gold 2.webp',
+                    'blue white 1.webp',
+                    'blue white 2.webp',
+                    'blue white 3.webp',
+                    'blue white 4.webp',
+                    'blue white 5.webp',
+                    'cyan 1.webp',
+                    'cyan 2.webp',
+                    'cyan 3.webp',
+                    'gold white 1.webp',
+                    'gold white 2.webp',
+                    'gold white 3.webp',
+                    'grey gold 1.webp',
+                    'grey gold 2.webp',
+                    'night beach 1.webp',
+                    'night beach 2.webp',
+                    'ocean 1.webp',
+                    'ocean 2.webp',
+                    'ocean 3.webp',
+                    'ocean 4.webp'
                 ]
             }
         };
 
         const category = categoryData[this.folderName.toLowerCase()];
-        
+
         if (!category) {
             console.error('Category not found:', this.folderName);
             window.location.href = 'index.html#gallery';
@@ -224,41 +224,41 @@ class GalleryDetail {
 
     async loadImagesFromFolder() {
         // Common image extensions to look for
-        const imageExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+        const imageExtensions = ['webp', 'jpg', 'jpeg', 'png', 'gif'];
         const images = [];
 
         // Since we can't directly read directory contents in the browser,
         // we'll try to load common image patterns and see which ones exist
         const commonPatterns = [
-            // Try numbered patterns
-            ...Array.from({length: 20}, (_, i) => `${i + 1}.jpg`),
-            ...Array.from({length: 20}, (_, i) => `${i + 1}.jpeg`),
-            ...Array.from({length: 20}, (_, i) => `${i + 1}.png`),
-            
+            // Try numbered patterns (webp first)
+            ...Array.from({ length: 20 }, (_, i) => `${i + 1}.webp`),
+            ...Array.from({ length: 20 }, (_, i) => `${i + 1}.jpg`),
+            ...Array.from({ length: 20 }, (_, i) => `${i + 1}.png`),
+
             // Try named patterns based on folder
+            `${this.folderName}.webp`,
             `${this.folderName}.jpg`,
-            `${this.folderName}.jpeg`,
             `${this.folderName}.png`,
-            `${this.folderName}_1.jpg`,
-            `${this.folderName}_2.jpg`,
-            `${this.folderName}_3.jpg`,
-            
+            `${this.folderName}_1.webp`,
+            `${this.folderName}_2.webp`,
+            `${this.folderName}_3.webp`,
+
             // Try common naming patterns
-            'image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg', 'image5.jpg',
-            'img1.jpg', 'img2.jpg', 'img3.jpg', 'img4.jpg', 'img5.jpg',
-            'photo1.jpg', 'photo2.jpg', 'photo3.jpg', 'photo4.jpg', 'photo5.jpg',
-            
+            'image1.webp', 'image2.webp', 'image3.webp', 'image4.webp', 'image5.webp',
+            'img1.webp', 'img2.webp', 'img3.webp', 'img4.webp', 'img5.webp',
+            'photo1.webp', 'photo2.webp', 'photo3.webp', 'photo4.webp', 'photo5.webp',
+
             // For keychain folder, use the known images
             ...(this.folderName.toLowerCase() === 'keychain' ? [
-                '1keychain ocean.jpg',
-                '2keychain amore.jpg',
-                'keychain bunch 1.jpg',
-                'keychain bunch 2.jpg',
-                'keychain k1.jpg',
-                'keychain k2.jpg',
-                'keychain riya.jpg',
-                'keychain s.jpg',
-                'keychain t.jpg'
+                '1keychain ocean.webp',
+                '2keychain amore.webp',
+                'keychain bunch 1.webp',
+                'keychain bunch 2.webp',
+                'keychain k1.webp',
+                'keychain k2.webp',
+                '3keychain riya.webp',
+                'keychain s.webp',
+                'keychain t.webp'
             ] : [])
         ];
 
@@ -399,7 +399,7 @@ class GalleryDetail {
             const zoomOutBtn = modal.querySelector('.zoom-out-btn');
             const zoomResetBtn = modal.querySelector('.zoom-reset-btn');
             const modalImage = modal.querySelector('#modalImage');
-            
+
             // Initialize zoom variables
             this.currentZoom = 1;
             this.minZoom = 0.5;
@@ -408,11 +408,11 @@ class GalleryDetail {
             this.isDragging = false;
             this.dragStart = { x: 0, y: 0 };
             this.imagePosition = { x: 0, y: 0 };
-            
+
             backdrop.addEventListener('click', () => {
                 this.closeImageModal();
             });
-            
+
             closeBtn.addEventListener('click', () => {
                 this.closeImageModal();
             });
@@ -473,12 +473,12 @@ class GalleryDetail {
     openImageModal(imageSrc, altText) {
         const modal = document.getElementById('imageModal');
         const modalImage = document.getElementById('modalImage');
-        
+
         modalImage.src = imageSrc;
         modalImage.alt = altText;
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
-        
+
         // Reset zoom and position
         this.resetZoom();
     }
@@ -487,18 +487,18 @@ class GalleryDetail {
         const modal = document.getElementById('imageModal');
         modal.classList.remove('active');
         document.body.style.overflow = 'auto';
-        
+
         // Reset zoom and position
         this.resetZoom();
     }
 
     zoomImage(delta) {
         const newZoom = Math.max(this.minZoom, Math.min(this.maxZoom, this.currentZoom + delta));
-        
+
         if (newZoom !== this.currentZoom) {
             this.currentZoom = newZoom;
             this.updateImageTransform();
-            
+
             const modalImage = document.getElementById('modalImage');
             modalImage.style.cursor = this.currentZoom > 1 ? 'grab' : 'default';
         }
@@ -508,7 +508,7 @@ class GalleryDetail {
         this.currentZoom = 1;
         this.imagePosition = { x: 0, y: 0 };
         this.updateImageTransform();
-        
+
         const modalImage = document.getElementById('modalImage');
         if (modalImage) {
             modalImage.style.cursor = 'default';
@@ -524,13 +524,13 @@ class GalleryDetail {
 }
 
 // Make functions globally accessible
-window.openImageModal = function(imageSrc, altText) {
+window.openImageModal = function (imageSrc, altText) {
     if (window.galleryDetail) {
         window.galleryDetail.openImageModal(imageSrc, altText);
     }
 };
 
-window.closeImageModal = function() {
+window.closeImageModal = function () {
     if (window.galleryDetail) {
         window.galleryDetail.closeImageModal();
     }

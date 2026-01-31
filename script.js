@@ -11,6 +11,7 @@ class ModernWebsite {
         this.setupGalleryFilters();
         this.setupCounterAnimations();
         this.setupTiltEffects();
+        this.setupSemiCircleCarousel();
     }
 
     init() {
@@ -20,13 +21,13 @@ class ModernWebsite {
         this.mouseX = 0;
         this.mouseY = 0;
         this.particles = [];
-        
+
         // Performance optimization
         this.rafId = null;
         this.ticking = false;
         this.lastParticleTime = 0;
         this.lastBurstTime = 0;
-        
+
         // Reduce motion for users who prefer it
         this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     }
@@ -48,12 +49,12 @@ class ModernWebsite {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 const target = document.querySelector(link.getAttribute('href'));
-                
+
                 if (target) {
                     hamburger.classList.remove('active');
                     navMenu.classList.remove('active');
                     document.body.classList.remove('nav-open');
-                    
+
                     this.smoothScrollTo(target);
                 }
             });
@@ -69,7 +70,7 @@ class ModernWebsite {
                 });
                 this.ticking = true;
             }
-            
+
             // Clear scroll timeout
             clearTimeout(scrollTimeout);
             scrollTimeout = setTimeout(() => {
@@ -121,14 +122,14 @@ class ModernWebsite {
         // Throttled cursor update
         const updateCursor = () => {
             if (!isMoving) return;
-            
+
             orchidCursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
-            
+
             // Smooth trail following with reduced frequency
             trailX += (cursorX - trailX) * 0.08;
             trailY += (cursorY - trailY) * 0.08;
             cursorTrail.style.transform = `translate(${trailX}px, ${trailY}px) translate(-50%, -50%)`;
-            
+
             // Stop animation when cursor stops moving
             if (Math.abs(cursorX - trailX) < 1 && Math.abs(cursorY - trailY) < 1) {
                 isMoving = false;
@@ -142,12 +143,12 @@ class ModernWebsite {
         document.addEventListener('mousemove', (e) => {
             cursorX = e.clientX;
             cursorY = e.clientY;
-            
+
             if (!isMoving) {
                 isMoving = true;
                 requestAnimationFrame(updateCursor);
             }
-            
+
             // Clear previous timeout
             clearTimeout(mouseMoveTimeout);
             mouseMoveTimeout = setTimeout(() => {
@@ -157,12 +158,12 @@ class ModernWebsite {
 
         // Cursor interactions for interactive elements
         const interactiveElements = document.querySelectorAll('a, button, .gallery-item, .filter-btn, .nav-link, .cta-button');
-        
+
         interactiveElements.forEach(el => {
             el.addEventListener('mouseenter', () => {
                 orchidCursor.classList.add('hover');
                 cursorTrail.classList.add('hover');
-                
+
                 // Add special effects for different elements
                 if (el.classList.contains('gallery-item')) {
                     this.createOrchidParticles(cursorX, cursorY);
@@ -200,7 +201,7 @@ class ModernWebsite {
         // Limit particle creation frequency
         if (this.lastParticleTime && Date.now() - this.lastParticleTime < 500) return;
         this.lastParticleTime = Date.now();
-        
+
         // Reduced particle count for better performance
         for (let i = 0; i < 3; i++) {
             const particle = document.createElement('div');
@@ -218,17 +219,17 @@ class ModernWebsite {
                 animation: orchidParticle 0.8s ease-out forwards;
                 transform: translate(-50%, -50%);
             `;
-            
+
             const angle = (Math.PI * 2 * i) / 3;
             const velocity = 15 + Math.random() * 10;
             const vx = Math.cos(angle) * velocity;
             const vy = Math.sin(angle) * velocity;
-            
+
             particle.style.setProperty('--vx', `${vx}px`);
             particle.style.setProperty('--vy', `${vy}px`);
-            
+
             document.body.appendChild(particle);
-            
+
             // Faster cleanup
             setTimeout(() => {
                 if (particle.parentNode) {
@@ -242,7 +243,7 @@ class ModernWebsite {
         // Limit burst creation frequency
         if (this.lastBurstTime && Date.now() - this.lastBurstTime < 300) return;
         this.lastBurstTime = Date.now();
-        
+
         // Reduced petal count for better performance
         for (let i = 0; i < 6; i++) {
             const petal = document.createElement('div');
@@ -260,9 +261,9 @@ class ModernWebsite {
                 animation: orchidBurst 0.6s ease-out forwards;
                 transform: translate(-50%, -50%) rotate(${i * 60}deg);
             `;
-            
+
             document.body.appendChild(petal);
-            
+
             // Faster cleanup
             setTimeout(() => {
                 if (petal.parentNode) {
@@ -280,7 +281,7 @@ class ModernWebsite {
     setupLoadingScreen() {
         const loadingScreen = document.querySelector('.loading-screen');
         const loadingProgress = document.querySelector('.loading-progress');
-        
+
         if (!loadingScreen || !loadingProgress) return;
 
         let progress = 0;
@@ -289,7 +290,7 @@ class ModernWebsite {
             if (progress >= 100) {
                 progress = 100;
                 clearInterval(interval);
-                
+
                 setTimeout(() => {
                     loadingScreen.classList.add('hidden');
                     this.isLoaded = true;
@@ -369,7 +370,7 @@ class ModernWebsite {
 
     handleScroll() {
         this.scrollY = window.pageYOffset;
-        
+
         // Update navbar (throttled)
         const navbar = document.querySelector('.navbar');
         if (navbar) {
@@ -396,11 +397,11 @@ class ModernWebsite {
     updateParallax() {
         // Simplified parallax with better performance
         const parallaxElements = document.querySelectorAll('.floating-item[data-tilt]');
-        
+
         parallaxElements.forEach((element, index) => {
             const speed = 0.3 + (index * 0.1); // Reduced intensity
             const yPos = -(this.scrollY * speed);
-            
+
             // Use transform3d for hardware acceleration and reduce calculations
             element.style.transform = `translate3d(0, ${yPos}px, 0)`;
         });
@@ -424,12 +425,12 @@ class ModernWebsite {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('animate');
-                    
+
                     // Stagger animation for gallery items
                     if (entry.target.classList.contains('gallery-item')) {
                         const items = Array.from(document.querySelectorAll('.gallery-item'));
                         const index = items.indexOf(entry.target);
-                        
+
                         setTimeout(() => {
                             entry.target.classList.add('show');
                         }, index * 100);
@@ -455,15 +456,15 @@ class ModernWebsite {
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const filter = btn.dataset.filter;
-                
+
                 // Update active button
                 filterBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                
+
                 // Filter items
                 galleryItems.forEach((item, index) => {
                     const category = item.dataset.category;
-                    
+
                     if (filter === 'all' || category === filter) {
                         setTimeout(() => {
                             item.style.display = 'block';
@@ -482,7 +483,7 @@ class ModernWebsite {
 
     setupCounterAnimations() {
         const counters = document.querySelectorAll('.stat-number');
-        
+
         const counterObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -490,7 +491,7 @@ class ModernWebsite {
                     const target = parseInt(counter.dataset.count);
                     let current = 0;
                     const increment = target / 100;
-                    
+
                     const updateCounter = () => {
                         if (current < target) {
                             current += increment;
@@ -500,7 +501,7 @@ class ModernWebsite {
                             counter.textContent = target;
                         }
                     };
-                    
+
                     updateCounter();
                     counterObserver.unobserve(counter);
                 }
@@ -514,26 +515,300 @@ class ModernWebsite {
 
     setupTiltEffects() {
         const tiltElements = document.querySelectorAll('[data-tilt]');
-        
+
         tiltElements.forEach(element => {
             element.addEventListener('mousemove', (e) => {
                 const rect = element.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
-                
+
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
-                
+
                 const rotateX = (y - centerY) / 10;
                 const rotateY = (centerX - x) / 10;
-                
+
                 element.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
             });
-            
+
             element.addEventListener('mouseleave', () => {
                 element.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
             });
         });
+    }
+
+    setupSemiCircleCarousel() {
+        const carouselTrack = document.querySelector('.carousel-track');
+        const cards = document.querySelectorAll('.carousel-card');
+        const leftArrow = document.querySelector('.carousel-arrow-left');
+        const rightArrow = document.querySelector('.carousel-arrow-right');
+        const indicators = document.querySelectorAll('.indicator');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        if (!carouselTrack || cards.length === 0) return;
+
+        let currentIndex = 0;
+        let allCards = Array.from(cards);
+        let visibleCards = [...allCards];
+        let autoPlayInterval = null;
+        const totalCards = cards.length;
+
+        // Full circle configuration
+        const circleRadius = 380; // Radius of the circle
+        const verticalOffset = 80; // How much to push cards down/up based on position
+
+        // Position cards in a full circle
+        const positionCards = (activeIndex) => {
+            const numCards = visibleCards.length;
+
+            visibleCards.forEach((card, i) => {
+                // Calculate the angle for this card in the circle
+                // Cards are evenly distributed around the full 360 degrees
+                const baseAngle = (i / numCards) * Math.PI * 2;
+
+                // Adjust angle based on which card is active (rotate the whole circle)
+                const activeAngle = (activeIndex / numCards) * Math.PI * 2;
+                const angle = baseAngle - activeAngle;
+
+                // Normalize angle to determine front/back position
+                // Front is at angle 0, back is at angle PI
+                let normalizedAngle = angle;
+                while (normalizedAngle < -Math.PI) normalizedAngle += Math.PI * 2;
+                while (normalizedAngle > Math.PI) normalizedAngle -= Math.PI * 2;
+
+                // Calculate X position (left/right on the circle)
+                const x = Math.sin(angle) * circleRadius;
+
+                // Calculate Z depth (cos gives us -1 at back, 1 at front)
+                const zDepth = Math.cos(angle);
+
+                // Calculate Y position - cards at front are slightly higher
+                const y = -zDepth * verticalOffset;
+
+                // Scale based on depth (1 at front, smaller at back)
+                const depthFactor = (zDepth + 1) / 2; // 0 at back, 1 at front
+                const scale = 0.5 + (depthFactor * 0.5); // 0.5 at back, 1.0 at front
+
+                // Blur based on depth (sharp at front, blurry at back)
+                const blur = (1 - depthFactor) * 8;
+
+                // Opacity based on depth
+                const opacity = 0.3 + (depthFactor * 0.7); // 0.3 at back, 1.0 at front
+
+                // Z-index based on depth (front cards on top)
+                const zIndex = Math.round(50 + zDepth * 50);
+
+                // Rotation for 3D effect
+                const rotateY = -Math.sin(angle) * 35;
+
+                // Apply transforms - use translateZ for true 3D depth
+                card.style.transform = `
+                    translate(-50%, -50%)
+                    translateX(${x}px)
+                    translateY(${y}px)
+                    translateZ(${zDepth * 200}px)
+                    scale(${scale})
+                    rotateY(${rotateY}deg)
+                `;
+                card.style.filter = blur < 0.5 ? 'blur(0px)' : `blur(${blur}px)`;
+                card.style.opacity = opacity;
+                card.style.zIndex = zIndex;
+
+                // Set active and adjacent classes
+                card.classList.remove('active', 'adjacent');
+                const isActive = Math.abs(normalizedAngle) < 0.3;
+                const isAdjacent = Math.abs(normalizedAngle) < 0.8 && !isActive;
+
+                if (isActive) {
+                    card.classList.add('active');
+                    card.style.pointerEvents = 'auto';
+                } else if (isAdjacent) {
+                    card.classList.add('adjacent');
+                    card.style.pointerEvents = 'auto';
+                } else {
+                    card.style.pointerEvents = 'none';
+                }
+            });
+
+            // Update indicators
+            indicators.forEach((indicator, i) => {
+                indicator.classList.toggle('active', i === activeIndex);
+            });
+        };
+
+        // Navigate to specific card
+        const goToCard = (index) => {
+            // Handle wrapping
+            if (index < 0) {
+                index = visibleCards.length - 1;
+            } else if (index >= visibleCards.length) {
+                index = 0;
+            }
+
+            currentIndex = index;
+            positionCards(currentIndex);
+        };
+
+        // Navigate previous
+        const prevCard = () => {
+            goToCard(currentIndex - 1);
+        };
+
+        // Navigate next
+        const nextCard = () => {
+            goToCard(currentIndex + 1);
+        };
+
+        // Auto-play functionality
+        const startAutoPlay = () => {
+            if (autoPlayInterval) clearInterval(autoPlayInterval);
+            autoPlayInterval = setInterval(() => {
+                nextCard();
+            }, 4000);
+        };
+
+        const stopAutoPlay = () => {
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = null;
+            }
+        };
+
+        // Event listeners
+        leftArrow?.addEventListener('click', () => {
+            prevCard();
+            stopAutoPlay();
+            startAutoPlay();
+        });
+
+        rightArrow?.addEventListener('click', () => {
+            nextCard();
+            stopAutoPlay();
+            startAutoPlay();
+        });
+
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                goToCard(index);
+                stopAutoPlay();
+                startAutoPlay();
+            });
+        });
+
+        // Card click to navigate
+        cards.forEach((card, index) => {
+            card.addEventListener('click', () => {
+                const cardIndex = visibleCards.indexOf(card);
+                if (cardIndex !== -1 && cardIndex !== currentIndex) {
+                    goToCard(cardIndex);
+                    stopAutoPlay();
+                    startAutoPlay();
+                }
+            });
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            const carouselWrapper = document.querySelector('.carousel-wrapper');
+            const rect = carouselWrapper?.getBoundingClientRect();
+            if (!rect) return;
+
+            // Only respond if carousel is in view
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    prevCard();
+                    stopAutoPlay();
+                    startAutoPlay();
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    nextCard();
+                    stopAutoPlay();
+                    startAutoPlay();
+                }
+            }
+        });
+
+        // Touch/swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        const carouselStage = document.querySelector('.carousel-stage');
+
+        carouselStage?.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            stopAutoPlay();
+        }, { passive: true });
+
+        carouselStage?.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            const diff = touchStartX - touchEndX;
+
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    nextCard();
+                } else {
+                    prevCard();
+                }
+            }
+            startAutoPlay();
+        }, { passive: true });
+
+        // Pause on hover
+        const carouselWrapper = document.querySelector('.carousel-wrapper');
+        carouselWrapper?.addEventListener('mouseenter', stopAutoPlay);
+        carouselWrapper?.addEventListener('mouseleave', startAutoPlay);
+
+        // Handle filter changes - update visible cards
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filter = btn.dataset.filter;
+
+                // Filter cards based on category
+                if (filter === 'all') {
+                    visibleCards = [...allCards];
+                } else {
+                    visibleCards = allCards.filter(card => card.dataset.category === filter);
+                }
+
+                // Update indicator count dynamically
+                indicators.forEach((indicator, i) => {
+                    indicator.style.display = i < visibleCards.length ? 'block' : 'none';
+                });
+
+                // Reset to first card
+                currentIndex = 0;
+
+                // Hide non-visible cards, show visible ones
+                allCards.forEach(card => {
+                    if (visibleCards.includes(card)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                // Reposition visible cards
+                positionCards(currentIndex);
+            });
+        });
+
+        // Card button click handler
+        document.querySelectorAll('.card-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const folderName = btn.dataset.folder;
+                if (folderName) {
+                    window.location.href = `gallery-detail.html?folder=${encodeURIComponent(folderName)}`;
+                }
+            });
+        });
+
+        // Initial positioning
+        positionCards(0);
+
+        // Start auto-play after a delay
+        setTimeout(startAutoPlay, 2000);
     }
 
     smoothScrollTo(target) {
@@ -563,14 +838,14 @@ class ModernWebsite {
 
     handleCTAClick(e) {
         const button = e.currentTarget;
-        
+
         // Create ripple effect
         const ripple = document.createElement('span');
         const rect = button.getBoundingClientRect();
         const size = Math.max(rect.width, rect.height);
         const x = e.clientX - rect.left - size / 2;
         const y = e.clientY - rect.top - size / 2;
-        
+
         ripple.style.cssText = `
             position: absolute;
             width: ${size}px;
@@ -583,11 +858,11 @@ class ModernWebsite {
             animation: ripple 0.6s ease-out;
             pointer-events: none;
         `;
-        
+
         button.style.position = 'relative';
         button.style.overflow = 'hidden';
         button.appendChild(ripple);
-        
+
         setTimeout(() => {
             ripple.remove();
         }, 600);
@@ -605,7 +880,7 @@ class ModernWebsite {
         e.preventDefault();
         const button = e.currentTarget;
         const folderName = button.dataset.folder;
-        
+
         if (folderName) {
             // Navigate to gallery detail page with folder parameter
             window.location.href = `gallery-detail.html?folder=${encodeURIComponent(folderName)}`;
