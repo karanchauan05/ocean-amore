@@ -558,11 +558,7 @@ class ModernWebsite {
         let circleRadius = window.innerWidth <= 480 ? 180 : (window.innerWidth <= 768 ? 280 : 420);
         let verticalOffset = window.innerWidth <= 768 ? 40 : 80;
 
-        window.addEventListener('resize', () => {
-            circleRadius = window.innerWidth <= 480 ? 180 : (window.innerWidth <= 768 ? 280 : 420);
-            verticalOffset = window.innerWidth <= 768 ? 40 : 80;
-            positionCards(currentIndex);
-        });
+
 
         // Position cards in a full circle
         const positionCards = (activeIndex) => {
@@ -641,6 +637,13 @@ class ModernWebsite {
             indicators.forEach((indicator, i) => {
                 indicator.classList.toggle('active', i === activeIndex);
             });
+        };
+
+        // Expose for external calls (like resize)
+        this.repositionSemiCircle = () => {
+            circleRadius = window.innerWidth <= 480 ? 180 : (window.innerWidth <= 768 ? 280 : 420);
+            verticalOffset = window.innerWidth <= 768 ? 40 : 80;
+            positionCards(currentIndex);
         };
 
         // Navigate to specific card
@@ -810,11 +813,7 @@ class ModernWebsite {
         let circleRadius = window.innerWidth <= 480 ? 160 : (window.innerWidth <= 768 ? 250 : 380);
         let verticalOffset = window.innerWidth <= 768 ? 30 : 60;
 
-        window.addEventListener('resize', () => {
-            circleRadius = window.innerWidth <= 480 ? 160 : (window.innerWidth <= 768 ? 250 : 380);
-            verticalOffset = window.innerWidth <= 768 ? 30 : 60;
-            positionSlides(currentIndex);
-        });
+
 
         // Position slides in a circle
         const positionSlides = (activeIndex) => {
@@ -870,6 +869,13 @@ class ModernWebsite {
             indicators.forEach((indicator, i) => {
                 indicator.classList.toggle('active', i === activeIndex);
             });
+        };
+
+        // Expose for external calls
+        this.repositionProcess = () => {
+            circleRadius = window.innerWidth <= 480 ? 160 : (window.innerWidth <= 768 ? 250 : 380);
+            verticalOffset = window.innerWidth <= 768 ? 30 : 60;
+            positionSlides(currentIndex);
         };
 
         const goToSlide = (index) => {
@@ -1060,12 +1066,16 @@ class ModernWebsite {
     handleResize() {
         // Handle responsive changes
         if (window.innerWidth <= 768) {
-            document.querySelector('.cursor')?.style.setProperty('display', 'none');
-            document.querySelector('.cursor-follower')?.style.setProperty('display', 'none');
+            document.querySelector('.orchid-cursor')?.style.setProperty('display', 'none');
+            document.querySelector('.cursor-trail')?.style.setProperty('display', 'none');
         } else {
-            document.querySelector('.cursor')?.style.setProperty('display', 'block');
-            document.querySelector('.cursor-follower')?.style.setProperty('display', 'block');
+            document.querySelector('.orchid-cursor')?.style.setProperty('display', 'block');
+            document.querySelector('.cursor-trail')?.style.setProperty('display', 'block');
         }
+
+        // Reposition carousels
+        if (this.repositionSemiCircle) this.repositionSemiCircle();
+        if (this.repositionProcess) this.repositionProcess();
     }
 }
 
