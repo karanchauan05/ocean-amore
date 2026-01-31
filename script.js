@@ -13,6 +13,7 @@ class ModernWebsite {
         this.setupTiltEffects();
         this.setupSemiCircleCarousel();
         this.setupProcessCarousel();
+        this.setupFooterDropdowns();
     }
 
     init() {
@@ -554,12 +555,12 @@ class ModernWebsite {
         const totalCards = cards.length;
 
         // Initial positioning and resize handler
-        let circleRadius = window.innerWidth <= 480 ? 280 : (window.innerWidth <= 768 ? 340 : 420);
-        let verticalOffset = window.innerWidth <= 768 ? 50 : 80;
+        let circleRadius = window.innerWidth <= 480 ? 180 : (window.innerWidth <= 768 ? 280 : 420);
+        let verticalOffset = window.innerWidth <= 768 ? 40 : 80;
 
         window.addEventListener('resize', () => {
-            circleRadius = window.innerWidth <= 480 ? 280 : (window.innerWidth <= 768 ? 340 : 420);
-            verticalOffset = window.innerWidth <= 768 ? 50 : 80;
+            circleRadius = window.innerWidth <= 480 ? 180 : (window.innerWidth <= 768 ? 280 : 420);
+            verticalOffset = window.innerWidth <= 768 ? 40 : 80;
             positionCards(currentIndex);
         });
 
@@ -792,140 +793,185 @@ class ModernWebsite {
     }
 
     setupProcessCarousel() {
-        const track = document.querySelector('.process-carousel-track');
-        let slides = Array.from(document.querySelectorAll('.process-slide'));
+        const carouselTrack = document.querySelector('.process-carousel-track');
+        const slides = document.querySelectorAll('.process-slide');
         const leftArrow = document.querySelector('.process-arrow-left');
         const rightArrow = document.querySelector('.process-arrow-right');
-        const indicators = Array.from(document.querySelectorAll('.process-indicator'));
+        const indicators = document.querySelectorAll('.process-indicator');
 
-        if (!track || slides.length === 0) return;
+        if (!carouselTrack || slides.length === 0) return;
 
-        // Infinite loop setup: Clone first and last slide
-        const firstClone = slides[0].cloneNode(true);
-        const lastClone = slides[slides.length - 1].cloneNode(true);
+        let currentIndex = 0;
+        let allSlides = Array.from(slides);
+        let autoPlayInterval = null;
+        const totalSlides = slides.length;
 
-        firstClone.classList.add('clone');
-        lastClone.classList.add('clone');
+        // Initial positioning and resize handler
+        let circleRadius = window.innerWidth <= 480 ? 160 : (window.innerWidth <= 768 ? 250 : 380);
+        let verticalOffset = window.innerWidth <= 768 ? 30 : 60;
 
-        track.appendChild(firstClone);
-        track.insertBefore(lastClone, slides[0]);
+        window.addEventListener('resize', () => {
+            circleRadius = window.innerWidth <= 480 ? 160 : (window.innerWidth <= 768 ? 250 : 380);
+            verticalOffset = window.innerWidth <= 768 ? 30 : 60;
+            positionSlides(currentIndex);
+        });
 
-        // Refresh slides array after cloning
-        const allSlides = document.querySelectorAll('.process-slide');
-        let currentIndex = 1; // Start at 1 because 0 is the lastClone
-        let isMoving = false;
-        const totalRealSlides = slides.length;
-
-        const updateCarousel = (index, animate = true) => {
-            if (isMoving && animate) return;
-            if (animate) isMoving = true;
-
-            currentIndex = index;
-
-            // Get dimensions
-            const slide = allSlides[0];
-            const computedStyle = window.getComputedStyle(slide);
-            const currentSlideWidth = parseFloat(computedStyle.width);
-            const currentGap = parseFloat(window.getComputedStyle(track).gap) || 32;
-            const fullSlideWidth = currentSlideWidth + currentGap;
-
-            // Calculate offset
-            const containerWidth = track.parentElement.offsetWidth;
-            const centerOffset = (containerWidth - currentSlideWidth) / 2;
-            const offset = -(index * fullSlideWidth) + centerOffset;
-
-            track.style.transition = animate ? 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'none';
-            track.style.transform = `translateX(${offset}px)`;
-
-            // Handle active states (for real slides logic)
-            // Real index is adjusted for the clone at the start
-            let activeIndex = index - 1;
-            if (activeIndex < 0) activeIndex = totalRealSlides - 1;
-            if (activeIndex >= totalRealSlides) activeIndex = 0;
+        // Position slides in a circle
+        const positionSlides = (activeIndex) => {
+            const numSlides = allSlides.length;
 
             allSlides.forEach((slide, i) => {
-                slide.classList.toggle('active', i === index);
+                const baseAngle = (i / numSlides) * Math.PI * 2;
+                const activeAngle = (activeIndex / numSlides) * Math.PI * 2;
+                const angle = baseAngle - activeAngle;
+
+                let normalizedAngle = angle;
+                while (normalizedAngle < -Math.PI) normalizedAngle += Math.PI * 2;
+                while (normalizedAngle > Math.PI) normalizedAngle -= Math.PI * 2;
+
+                const x = Math.sin(angle) * circleRadius;
+                const zDepth = Math.cos(angle);
+                const y = (1 - zDepth) * verticalOffset;
+
+                const depthFactor = (zDepth + 1) / 2;
+                const scale = 0.5 + (depthFactor * 0.5);
+                const blur = (1 - depthFactor) * 8;
+                const opacity = 0.3 + (depthFactor * 0.7);
+                const zIndex = Math.round(50 + zDepth * 50);
+                const rotateY = -Math.sin(angle) * 35;
+
+                slide.style.transform = `
+                    translate(-50%, -50%)
+                    translateX(${x}px)
+                    translateY(${y}px)
+                    translateZ(${zDepth * 200}px)
+                    scale(${scale})
+                    rotateY(${rotateY}deg)
+                `;
+                slide.style.filter = blur < 0.5 ? 'blur(0px)' : `blur(${blur}px)`;
+                slide.style.opacity = opacity;
+                slide.style.zIndex = zIndex;
+
+                slide.classList.remove('active', 'adjacent');
+                const isActive = Math.abs(normalizedAngle) < 0.3;
+                const isAdjacent = Math.abs(normalizedAngle) < 0.8 && !isActive;
+
+                if (isActive) {
+                    slide.classList.add('active');
+                    slide.style.pointerEvents = 'auto';
+                } else if (isAdjacent) {
+                    slide.classList.add('adjacent');
+                    slide.style.pointerEvents = 'auto';
+                } else {
+                    slide.style.pointerEvents = 'none';
+                }
             });
 
             indicators.forEach((indicator, i) => {
                 indicator.classList.toggle('active', i === activeIndex);
             });
-
-            if (animate) {
-                setTimeout(() => {
-                    isMoving = false;
-                    checkBoundary();
-                }, 600);
-            }
-        };
-
-        const checkBoundary = () => {
-            // If at first clone (end of list), jump to first real slide
-            if (currentIndex === allSlides.length - 1) {
-                updateCarousel(1, false);
-            }
-            // If at last clone (start of list), jump to last real slide
-            if (currentIndex === 0) {
-                updateCarousel(allSlides.length - 2, false);
-            }
-        };
-
-        const nextSlide = () => {
-            if (isMoving) return;
-            updateCarousel(currentIndex + 1);
-        };
-
-        const prevSlide = () => {
-            if (isMoving) return;
-            updateCarousel(currentIndex - 1);
         };
 
         const goToSlide = (index) => {
-            if (isMoving) return;
-            updateCarousel(index + 1);
+            if (index < 0) {
+                index = allSlides.length - 1;
+            } else if (index >= allSlides.length) {
+                index = 0;
+            }
+            currentIndex = index;
+            positionSlides(currentIndex);
         };
 
-        // Arrow click events
-        leftArrow?.addEventListener('click', prevSlide);
-        rightArrow?.addEventListener('click', nextSlide);
+        const prevSlide = () => goToSlide(currentIndex - 1);
+        const nextSlide = () => goToSlide(currentIndex + 1);
 
-        // Indicator click events
+        const startAutoPlay = () => {
+            if (autoPlayInterval) clearInterval(autoPlayInterval);
+            autoPlayInterval = setInterval(nextSlide, 5000);
+        };
+
+        const stopAutoPlay = () => {
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = null;
+            }
+        };
+
+        leftArrow?.addEventListener('click', () => {
+            prevSlide();
+            stopAutoPlay();
+            startAutoPlay();
+        });
+
+        rightArrow?.addEventListener('click', () => {
+            nextSlide();
+            stopAutoPlay();
+            startAutoPlay();
+        });
+
         indicators.forEach((indicator, index) => {
-            indicator.addEventListener('click', () => goToSlide(index));
+            indicator.addEventListener('click', () => {
+                goToSlide(index);
+                stopAutoPlay();
+                startAutoPlay();
+            });
+        });
+
+        allSlides.forEach((slide, index) => {
+            slide.addEventListener('click', () => {
+                if (index !== currentIndex) {
+                    goToSlide(index);
+                    stopAutoPlay();
+                    startAutoPlay();
+                }
+            });
         });
 
         // Touch swipe support
         let touchStartX = 0;
         let touchEndX = 0;
+        const stage = document.querySelector('.process-carousel-stage');
 
-        track.addEventListener('touchstart', (e) => {
+        stage?.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
+            stopAutoPlay();
         }, { passive: true });
 
-        track.addEventListener('touchend', (e) => {
-            if (isMoving) return;
+        stage?.addEventListener('touchend', (e) => {
             touchEndX = e.changedTouches[0].screenX;
             const diff = touchStartX - touchEndX;
-
             if (Math.abs(diff) > 50) {
-                if (diff > 0) {
-                    nextSlide();
-                } else {
-                    prevSlide();
-                }
+                if (diff > 0) nextSlide();
+                else prevSlide();
             }
+            startAutoPlay();
         }, { passive: true });
 
-        // Window resize handle
-        window.addEventListener('resize', () => {
-            updateCarousel(currentIndex, false);
-        });
+        positionSlides(0);
+        setTimeout(startAutoPlay, 3000);
+    }
 
-        // Initial set - jump to first real slide
-        // Wait for next tick to ensure dimensions are ready
-        setTimeout(() => {
-            updateCarousel(1, false);
-        }, 50);
+    setupFooterDropdowns() {
+        const footerColumns = document.querySelectorAll('.footer-column');
+
+        footerColumns.forEach(column => {
+            const header = column.querySelector('h4');
+            if (!header) return;
+
+            header.addEventListener('click', () => {
+                if (window.innerWidth > 768) return;
+
+                // Close other columns
+                footerColumns.forEach(otherColumn => {
+                    if (otherColumn !== column && otherColumn.classList.contains('active')) {
+                        otherColumn.classList.remove('active');
+                    }
+                });
+
+                // Toggle current column
+                column.classList.toggle('active');
+            });
+        });
     }
 
     smoothScrollTo(target) {
