@@ -12,6 +12,7 @@ class ModernWebsite {
         this.setupCounterAnimations();
         this.setupTiltEffects();
         this.setupSemiCircleCarousel();
+        this.setupProcessCarousel();
     }
 
     init() {
@@ -543,7 +544,6 @@ class ModernWebsite {
         const leftArrow = document.querySelector('.carousel-arrow-left');
         const rightArrow = document.querySelector('.carousel-arrow-right');
         const indicators = document.querySelectorAll('.indicator');
-        const filterBtns = document.querySelectorAll('.filter-btn');
 
         if (!carouselTrack || cards.length === 0) return;
 
@@ -553,9 +553,15 @@ class ModernWebsite {
         let autoPlayInterval = null;
         const totalCards = cards.length;
 
-        // Full circle configuration
-        const circleRadius = 380; // Radius of the circle
-        const verticalOffset = 80; // How much to push cards down/up based on position
+        // Initial positioning and resize handler
+        let circleRadius = window.innerWidth <= 480 ? 280 : (window.innerWidth <= 768 ? 340 : 420);
+        let verticalOffset = window.innerWidth <= 768 ? 50 : 80;
+
+        window.addEventListener('resize', () => {
+            circleRadius = window.innerWidth <= 480 ? 280 : (window.innerWidth <= 768 ? 340 : 420);
+            verticalOffset = window.innerWidth <= 768 ? 50 : 80;
+            positionCards(currentIndex);
+        });
 
         // Position cards in a full circle
         const positionCards = (activeIndex) => {
@@ -582,8 +588,8 @@ class ModernWebsite {
                 // Calculate Z depth (cos gives us -1 at back, 1 at front)
                 const zDepth = Math.cos(angle);
 
-                // Calculate Y position - cards at front are slightly higher
-                const y = -zDepth * verticalOffset;
+                // Calculate Y position - active card (front) stays at y=0, others shift down
+                const y = (1 - zDepth) * verticalOffset;
 
                 // Scale based on depth (1 at front, smaller at back)
                 const depthFactor = (zDepth + 1) / 2; // 0 at back, 1 at front
@@ -695,11 +701,19 @@ class ModernWebsite {
             });
         });
 
-        // Card click to navigate
+        // Card click to navigate or open detail
         cards.forEach((card, index) => {
-            card.addEventListener('click', () => {
+            card.addEventListener('click', (e) => {
                 const cardIndex = visibleCards.indexOf(card);
-                if (cardIndex !== -1 && cardIndex !== currentIndex) {
+
+                // If clicking on the active card, open the detail page
+                if (cardIndex === currentIndex && card.classList.contains('active')) {
+                    const folderName = card.querySelector('.card-btn')?.dataset.folder;
+                    if (folderName) {
+                        window.location.href = `gallery-detail.html?folder=${encodeURIComponent(folderName)}`;
+                    }
+                } else if (cardIndex !== -1 && cardIndex !== currentIndex) {
+                    // Otherwise, navigate to that card
                     goToCard(cardIndex);
                     stopAutoPlay();
                     startAutoPlay();
@@ -759,40 +773,6 @@ class ModernWebsite {
         carouselWrapper?.addEventListener('mouseenter', stopAutoPlay);
         carouselWrapper?.addEventListener('mouseleave', startAutoPlay);
 
-        // Handle filter changes - update visible cards
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const filter = btn.dataset.filter;
-
-                // Filter cards based on category
-                if (filter === 'all') {
-                    visibleCards = [...allCards];
-                } else {
-                    visibleCards = allCards.filter(card => card.dataset.category === filter);
-                }
-
-                // Update indicator count dynamically
-                indicators.forEach((indicator, i) => {
-                    indicator.style.display = i < visibleCards.length ? 'block' : 'none';
-                });
-
-                // Reset to first card
-                currentIndex = 0;
-
-                // Hide non-visible cards, show visible ones
-                allCards.forEach(card => {
-                    if (visibleCards.includes(card)) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-
-                // Reposition visible cards
-                positionCards(currentIndex);
-            });
-        });
-
         // Card button click handler
         document.querySelectorAll('.card-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -809,6 +789,143 @@ class ModernWebsite {
 
         // Start auto-play after a delay
         setTimeout(startAutoPlay, 2000);
+    }
+
+    setupProcessCarousel() {
+        const track = document.querySelector('.process-carousel-track');
+        let slides = Array.from(document.querySelectorAll('.process-slide'));
+        const leftArrow = document.querySelector('.process-arrow-left');
+        const rightArrow = document.querySelector('.process-arrow-right');
+        const indicators = Array.from(document.querySelectorAll('.process-indicator'));
+
+        if (!track || slides.length === 0) return;
+
+        // Infinite loop setup: Clone first and last slide
+        const firstClone = slides[0].cloneNode(true);
+        const lastClone = slides[slides.length - 1].cloneNode(true);
+
+        firstClone.classList.add('clone');
+        lastClone.classList.add('clone');
+
+        track.appendChild(firstClone);
+        track.insertBefore(lastClone, slides[0]);
+
+        // Refresh slides array after cloning
+        const allSlides = document.querySelectorAll('.process-slide');
+        let currentIndex = 1; // Start at 1 because 0 is the lastClone
+        let isMoving = false;
+        const totalRealSlides = slides.length;
+
+        const updateCarousel = (index, animate = true) => {
+            if (isMoving && animate) return;
+            if (animate) isMoving = true;
+
+            currentIndex = index;
+
+            // Get dimensions
+            const slide = allSlides[0];
+            const computedStyle = window.getComputedStyle(slide);
+            const currentSlideWidth = parseFloat(computedStyle.width);
+            const currentGap = parseFloat(window.getComputedStyle(track).gap) || 32;
+            const fullSlideWidth = currentSlideWidth + currentGap;
+
+            // Calculate offset
+            const containerWidth = track.parentElement.offsetWidth;
+            const centerOffset = (containerWidth - currentSlideWidth) / 2;
+            const offset = -(index * fullSlideWidth) + centerOffset;
+
+            track.style.transition = animate ? 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'none';
+            track.style.transform = `translateX(${offset}px)`;
+
+            // Handle active states (for real slides logic)
+            // Real index is adjusted for the clone at the start
+            let activeIndex = index - 1;
+            if (activeIndex < 0) activeIndex = totalRealSlides - 1;
+            if (activeIndex >= totalRealSlides) activeIndex = 0;
+
+            allSlides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+
+            indicators.forEach((indicator, i) => {
+                indicator.classList.toggle('active', i === activeIndex);
+            });
+
+            if (animate) {
+                setTimeout(() => {
+                    isMoving = false;
+                    checkBoundary();
+                }, 600);
+            }
+        };
+
+        const checkBoundary = () => {
+            // If at first clone (end of list), jump to first real slide
+            if (currentIndex === allSlides.length - 1) {
+                updateCarousel(1, false);
+            }
+            // If at last clone (start of list), jump to last real slide
+            if (currentIndex === 0) {
+                updateCarousel(allSlides.length - 2, false);
+            }
+        };
+
+        const nextSlide = () => {
+            if (isMoving) return;
+            updateCarousel(currentIndex + 1);
+        };
+
+        const prevSlide = () => {
+            if (isMoving) return;
+            updateCarousel(currentIndex - 1);
+        };
+
+        const goToSlide = (index) => {
+            if (isMoving) return;
+            updateCarousel(index + 1);
+        };
+
+        // Arrow click events
+        leftArrow?.addEventListener('click', prevSlide);
+        rightArrow?.addEventListener('click', nextSlide);
+
+        // Indicator click events
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => goToSlide(index));
+        });
+
+        // Touch swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        track.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        track.addEventListener('touchend', (e) => {
+            if (isMoving) return;
+            touchEndX = e.changedTouches[0].screenX;
+            const diff = touchStartX - touchEndX;
+
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+            }
+        }, { passive: true });
+
+        // Window resize handle
+        window.addEventListener('resize', () => {
+            updateCarousel(currentIndex, false);
+        });
+
+        // Initial set - jump to first real slide
+        // Wait for next tick to ensure dimensions are ready
+        setTimeout(() => {
+            updateCarousel(1, false);
+        }, 50);
     }
 
     smoothScrollTo(target) {
